@@ -65,6 +65,14 @@ app.get("/buyer", (req, res) => res.sendFile(path.join(__dirname, "buyer-portal.
 app.get("/seller", (req, res) => res.sendFile(path.join(__dirname, "seller-portal.html")));
 app.get("/admin", (req, res) => res.sendFile(path.join(__dirname, "admin.html")));
 
+// Redirect legacy .html routes to clean routes
+app.get("/index.html", (req, res) => res.redirect("/"));
+app.get("/login.html", (req, res) => res.redirect("/login"));
+app.get("/signup.html", (req, res) => res.redirect("/signup"));
+app.get("/buyer-portal.html", (req, res) => res.redirect("/buyer"));
+app.get("/seller-portal.html", (req, res) => res.redirect("/seller"));
+app.get("/admin.html", (req, res) => res.redirect("/admin"));
+
 // Error Handling Middleware (MUST BE LAST)
 app.use(errorHandler);
 
