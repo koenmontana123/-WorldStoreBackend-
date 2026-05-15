@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldStore | Seller Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --sage: #84a59d;
+            --terracotta: #f28482;
+            --sand: #f7ede2;
+            --cream: #fdfaf6;
+            --charcoal: #3d405b;
+            --clay: #e07a5f;
+            --olive: #588157;
+            
+            --bg-body: #fdfaf6;
+            --sidebar-bg: var(--charcoal);
+            --white: #ffffff;
+            --border: #e9e0d2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--charcoal); display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
+        .sidebar-header { padding: 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-header h2 { color: var(--sand); font-size: 24px; font-weight: 800; }
+        
+        .sidebar-menu { flex: 1; padding: 30px 0; }
+        .menu-item { padding: 16px 30px; display: flex; align-items: center; gap: 15px; color: rgba(255,255,255,0.6); text-decoration: none; cursor: pointer; transition: all 0.3s; border-left: 4px solid transparent; }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.05); color: var(--sand); border-left-color: var(--clay); }
+        .menu-item i { font-size: 18px; color: var(--sage); }
+
+        /* Main Content */
+        .main-content { flex: 1; margin-left: 260px; display: flex; flex-direction: column; }
+        
+        .top-bar { height: 80px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: sticky; top: 0; z-index: 900; }
+        
+        .dashboard-container { padding: 40px; max-width: 1200px; }
+        .page-title { font-size: 28px; font-weight: 800; margin-bottom: 30px; color: var(--charcoal); }
+        
+        /* Stat Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: var(--white); padding: 30px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .stat-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
+        .stat-value { font-size: 32px; font-weight: 800; color: var(--charcoal); }
+        .stat-label { color: var(--text-light); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .bg-clay-soft { background: rgba(224, 122, 95, 0.1); color: var(--clay); }
+        .bg-olive-soft { background: rgba(88, 129, 87, 0.1); color: var(--olive); }
+        .bg-sage-soft { background: rgba(132, 165, 157, 0.1); color: var(--sage); }
+
+        /* Tables & Content */
+        .content-card { background: var(--white); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 20px; background: var(--sand); color: var(--charcoal); font-weight: 700; font-size: 13px; text-transform: uppercase; }
+        td { padding: 20px; border-bottom: 1px solid var(--border); }
+        
+        .btn-primary { background: var(--clay); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+        .btn-primary:hover { background: var(--charcoal); transform: translateY(-2px); }
+
+        .form-control { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--cream); font-family: inherit; margin-bottom: 20px; }
+        .form-control:focus { outline: none; border-color: var(--clay); }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 15px;">
+                <circle cx="50" cy="50" r="48" fill="#F7EDE2" stroke="#84A59D" stroke-width="4"/>
+                <path d="M50 20C50 20 30 40 30 60C30 80 50 85 50 85C50 85 70 80 70 60C70 40 50 20 Z" fill="#588157" opacity="0.8"/>
+                <path d="M50 20L50 85" stroke="#FDFAF6" stroke-width="2" stroke-linecap="round"/>
+                <path d="M50 40C60 45 65 55 65 55" stroke="#FDFAF6" stroke-width="2" stroke-linecap="round"/>
+                <path d="M50 50C40 55 35 65 35 65" stroke="#FDFAF6" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <h2>WorldStore</h2>
+        </div>
+        <nav class="sidebar-menu">
+            <a class="menu-item active" onclick="switchTab('dashboard', this)">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </a>
+            <a class="menu-item" onclick="switchTab('products', this)">
+                <i class="fas fa-leaf"></i> My Collection
+            </a>
+            <a class="menu-item" onclick="switchTab('add-product', this)">
+                <i class="fas fa-plus-circle"></i> New Listing
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div id="shopNameDisplay" style="font-weight: 700; color: var(--olive);">Organic Curator Portal</div>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <span id="userName" style="font-weight: 600;">Seller Account</span>
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--clay); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800;" id="avatar">S</div>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <div id="dashboard" class="tab-content active">
+                <h1 class="page-title">Curation Performance</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-clay-soft"><i class="fas fa-seedling"></i></div>
+                        <div class="stat-value" id="stat-total-products">0</div>
+                        <div class="stat-label">Active Listings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-olive-soft"><i class="fas fa-check-double"></i></div>
+                        <div class="stat-value" id="stat-approved">0</div>
+                        <div class="stat-label">Live Units</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-sage-soft"><i class="fas fa-warehouse"></i></div>
+                        <div class="stat-value" id="stat-stock">0</div>
+                        <div class="stat-label">Total Inventory</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="products" class="tab-content" style="display:none;">
+                <h1 class="page-title">Manage Collection</h1>
+                <div class="content-card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Collection</th>
+                                    <th>Value</th>
+                                    <th>Inventory</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="add-product" class="tab-content" style="display:none;">
+                <h1 class="page-title">New Collection Item</h1>
+                <div class="content-card" style="max-width: 700px; padding: 40px;">
+                    <input type="text" id="pName" class="form-control" placeholder="Item Name">
+                    <select id="pCategory" class="form-control">
+                        <option value="Home">Home & Living</option>
+                        <option value="Electronics">Technology</option>
+                        <option value="Fashion">Apparel</option>
+                        <option value="Accessories">Handcrafted</option>
+                    </select>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <input type="number" id="pPrice" class="form-control" placeholder="Price (KES)">
+                        <input type="number" id="pStock" class="form-control" placeholder="Stock">
+                    </div>
+                    
+                    <!-- New Dual Image Input -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display:block; margin-bottom:10px; font-weight:700; font-size:14px; color:var(--charcoal);">Product Image</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <button type="button" id="btnUrl" onclick="setImageMode('url')" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--sand); cursor:pointer; font-weight:600;">Online URL</button>
+                            <button type="button" id="btnFile" onclick="setImageMode('file')" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--white); cursor:pointer; font-weight:600;">From Device</button>
+                        </div>
+                        
+                        <div id="urlInput">
+                            <input type="text" id="pImage" class="form-control" placeholder="Paste image link from web..." oninput="updatePreview(this.value)">
+                        </div>
+                        
+                        <div id="fileInput" style="display: none;">
+                            <input type="file" id="pFileData" class="form-control" accept="image/*" onchange="handleFileUpload(this)">
+                        </div>
+
+                        <div id="imgPreview" style="margin-top: 15px; display: none; text-align: center;">
+                            <img id="previewTag" src="" style="width: 150px; height: 150px; object-fit: cover; border-radius: 16px; border: 2px solid var(--sand);">
+                        </div>
+                    </div>
+
+                    <textarea id="pDesc" class="form-control" rows="4" placeholder="Craft a story for this item..."></textarea>
+                    <button class="btn-primary" onclick="saveProduct()">List to Collection</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let products = [];
+        let currentImageMode = 'url';
+
+        async function init() {
+            checkAuth();
+            await loadData();
+        }
+
+        function setImageMode(mode) {
+            currentImageMode = mode;
+            document.getElementById('urlInput').style.display = mode === 'url' ? 'block' : 'none';
+            document.getElementById('fileInput').style.display = mode === 'file' ? 'block' : 'none';
+            document.getElementById('btnUrl').style.background = mode === 'url' ? 'var(--sand)' : 'var(--white)';
+            document.getElementById('btnFile').style.background = mode === 'file' ? 'var(--sand)' : 'var(--white)';
+            
+            if (mode === 'file') {
+                document.getElementById('pImage').value = ''; // Clear URL if switching to file
+            }
+        }
+
+        function updatePreview(url) {
+            const preview = document.getElementById('imgPreview');
+            const tag = document.getElementById('previewTag');
+            if (url) {
+                tag.src = url;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        async function handleFileUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('/api/seller/upload-image', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.imageUrl) {
+                    document.getElementById('pImage').value = data.imageUrl;
+                    updatePreview(data.imageUrl);
+                }
+            } catch (err) {
+                alert('Upload failed');
+            }
+        }
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token || localStorage.getItem('role') !== 'seller') window.location.href = 'login.html';
+            document.getElementById('userName').textContent = localStorage.getItem('userName');
+            document.getElementById('avatar').textContent = localStorage.getItem('userName').charAt(0);
+        }
+
+        async function loadData() {
+            const token = localStorage.getItem('token');
+            const res = await fetch('/api/seller/products', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            products = await res.json();
+            document.getElementById('stat-total-products').textContent = products.length;
+            document.getElementById('stat-approved').textContent = products.filter(p => p.isApproved).length;
+            document.getElementById('stat-stock').textContent = products.reduce((s, p) => s + p.stock, 0);
+            renderInventory();
+        }
+
+        function renderInventory() {
+            document.getElementById('inventoryBody').innerHTML = products.map(p => `
+                <tr>
+                    <td><div style="display:flex;align-items:center;gap:12px;"><img src="${p.image}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;"><b>${p.name}</b></div></td>
+                    <td>${p.category}</td>
+                    <td>KES ${p.price.toLocaleString()}</td>
+                    <td>${p.stock}</td>
+                    <td><button onclick="deleteItem('${p._id}')" style="background:none;border:none;color:var(--terracotta);cursor:pointer;"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function saveProduct() {
+            const body = {
+                name: document.getElementById('pName').value,
+                description: document.getElementById('pDesc').value,
+                category: document.getElementById('pCategory').value,
+                price: parseFloat(document.getElementById('pPrice').value),
+                stock: parseInt(document.getElementById('pStock').value),
+                image: document.getElementById('pImage').value
+            };
+            const token = localStorage.getItem('token');
+            await fetch('/api/seller/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(body)
+            });
+            alert('Item added to collection!');
+            location.reload();
+        }
+
+        function switchTab(id, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            if(el) el.classList.add('active');
+        }
+
+        async function deleteItem(id) {
+            if(!confirm('Remove item?')) return;
+            const token = localStorage.getItem('token');
+            await fetch(`/api/seller/products/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            loadData();
+        }
+
+        init();
+    </script>
+</body>
+</html>

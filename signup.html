@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WorldStore - Sign Up</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 100%; max-width: 450px; }
+        h1 { color: #333; margin-bottom: 30px; text-align: center; }
+        .role-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+        .role-btn { flex: 1; padding: 12px; border: 2px solid #ddd; background: white; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: all 0.3s; }
+        .role-btn.active { background: #667eea; color: white; border-color: #667eea; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .seller-only { display: none; }
+        .seller-only.show { display: block; }
+        button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        button:hover { background: #764ba2; }
+        .link { text-align: center; margin-top: 20px; }
+        .link a { color: #667eea; text-decoration: none; cursor: pointer; }
+        .link a:hover { text-decoration: underline; }
+        .error { color: red; font-size: 14px; margin-bottom: 15px; }
+        .success { color: green; font-size: 14px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WorldStore Sign Up</h1>
+        <div class="role-selector">
+            <button class="role-btn active" onclick="setRole('buyer')">👤 Buyer</button>
+            <button class="role-btn" onclick="setRole('seller')">🏪 Seller</button>
+        </div>
+        <div id="message"></div>
+        <input type="email" id="email" placeholder="Email address" />
+        <input type="password" id="password" placeholder="Password (min 6 characters)" />
+        <input type="text" id="fullName" placeholder="Full Name" />
+        <input type="text" id="phone" placeholder="Phone Number" />
+        <input type="text" id="address" placeholder="Address" />
+        
+        <div class="seller-only" id="sellerFields">
+            <input type="text" id="shopName" placeholder="Shop Name" />
+            <input type="text" id="shopDescription" placeholder="Shop Description" />
+            
+            <div style="background: #fdfaf6; padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px solid var(--border-warm);">
+                <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--charcoal);">Payment Payout Details</h3>
+                <p style="font-size: 11px; margin-bottom: 10px; color: var(--text-light);">Where should we send your money?</p>
+                
+                <select id="payoutType" class="form-control" style="margin-bottom: 10px;" onchange="toggleFields()">
+                    <option value="MPESA_B2C">Personal M-Pesa (Phone)</option>
+                    <option value="MPESA_TILL">M-Pesa Buy Goods Till</option>
+                    <option value="MPESA_PAYBILL">M-Pesa Paybill</option>
+                </select>
+
+                <input type="text" id="payoutAccount" placeholder="Number / Account (e.g. 254...)" style="margin-bottom: 10px;">
+                
+                <div id="paybillAccountField" style="display:none;">
+                    <input type="text" id="paybillRef" placeholder="Paybill Account Name (Optional)">
+                </div>
+            </div>
+        </div>
+
+        <button onclick="signup()">Create Account</button>
+        <div class="link">
+            Already have an account? <a onclick="goToLogin()">Login</a>
+        </div>
+    </div>
+
+    <script>
+        let selectedRole = 'buyer';
+
+        function toggleFields() {
+            const type = document.getElementById('payoutType').value;
+            const paybillField = document.getElementById('paybillAccountField');
+            paybillField.style.display = type === 'MPESA_PAYBILL' ? 'block' : 'none';
+        }
+
+        function setRole(role) {
+            selectedRole = role;
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const sellerFields = document.getElementById('sellerFields');
+            if (role === 'seller') {
+                sellerFields.classList.add('show');
+            } else {
+                sellerFields.classList.remove('show');
+            }
+        }
+
+        async function signup() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('fullName').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+
+            if (!email || !password || !fullName) {
+                showMessage('Please fill in required fields', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            const body = {
+                email,
+                password,
+                fullName,
+                role: selectedRole,
+                phone,
+                address
+            };
+
+            if (selectedRole === 'seller') {
+                body.shopName = document.getElementById('shopName').value;
+                body.shopDescription = document.getElementById('shopDescription').value;
+                body.payout_info = {
+                    payoutMethod: document.getElementById('payoutType').value,
+                    destination: document.getElementById('payoutAccount').value,
+                    paybillRef: document.getElementById('paybillRef').value
+                };
+                
+                if (!body.shopName) {
+                    showMessage('Shop name is required for sellers', 'error');
+                    return;
+                }
+                if (!body.payout_info.destination) {
+                    showMessage('Payout account/number is required', 'error');
+                    return;
+                }
+            }
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage('Account created! Redirecting...', 'success');
+                    setTimeout(() => {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('role', data.user.role);
+                        localStorage.setItem('userId', data.user.id);
+                        localStorage.setItem('userName', data.user.fullName);
+                        
+                        if (selectedRole === 'buyer') {
+                            window.location.href = 'buyer-portal.html';
+                        } else {
+                            window.location.href = 'seller-portal.html';
+                        }
+                    }, 1000);
+                } else {
+                    showMessage(data.error || 'Registration failed', 'error');
+                }
+            } catch (err) {
+                showMessage('Error: ' + err.message, 'error');
+            }
+        }
+
+        function showMessage(msg, type) {
+            const msgEl = document.getElementById('message');
+            msgEl.innerHTML = `<div class="${type}">${msg}</div>`;
+            if (type === 'error') {
+                setTimeout(() => msgEl.innerHTML = '', 3000);
+            }
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

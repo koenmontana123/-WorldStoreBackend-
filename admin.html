@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Store | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #f68b1e; --dark: #1a1a1a; --success: #2e7d32; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: #f4f7f6; display: flex; justify-content: center; padding: 40px; }
+        .admin-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 500px; }
+        h2 { color: var(--dark); border-bottom: 2px solid var(--primary); display: inline-block; margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        input, textarea, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        button { width: 100%; padding: 15px; border: none; border-radius: 8px; background: var(--primary); color: white; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button:hover { background: #e07a1b; transform: translateY(-2px); }
+        .preview-box { margin-top: 20px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px; text-align: center; }
+        #img-prev { max-width: 100px; display: none; margin: 10px auto; }
+    </style>
+</head>
+<body>
+
+<div class="admin-card">
+    <h2><i class="fas fa-user-shield"></i> Add New Product</h2>
+    <form id="productForm">
+        <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" id="name" placeholder="e.g. Sony Headphones" required>
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <select id="category">
+                <option value="Computing">Computing</option>
+                <option value="Phones">Phones</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Price (KES)</label>
+            <input type="number" id="price" placeholder="2500" required>
+        </div>
+        <div class="form-group">
+            <label>Image URL</label>
+            <input type="text" id="image" placeholder="Paste link from Unsplash or Google" oninput="showPreview(this.value)">
+            <div class="preview-box">
+                <img id="img-prev" src="" alt="Preview">
+                <p id="prev-text" style="font-size:12px; color:#888;">Image Preview</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="description" rows="3" placeholder="Tell buyers about this item..."></textarea>
+        </div>
+        <button type="submit">UPLOAD TO STORE</button>
+    </form>
+</div>
+
+<script>
+    function showPreview(url) {
+        const img = document.getElementById('img-prev');
+        const text = document.getElementById('prev-text');
+        if(url) {
+            img.src = url;
+            img.style.display = 'block';
+            text.style.display = 'none';
+        }
+    }
+
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const productData = {
+            name: document.getElementById('name').value,
+            category: document.getElementById('category').value,
+            price: Number(document.getElementById('price').value),
+            image: document.getElementById('image').value,
+            description: document.getElementById('description').value
+        };
+
+        try {
+            const response = await fetch('/api/admin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData)
+            });
+
+            if (response.ok) {
+                alert("?? Product Live on World Store!");
+                document.getElementById('productForm').reset();
+                document.getElementById('img-prev').style.display = 'none';
+            }
+        } catch (error) {
+            alert("Error connecting to server. Is Nodemon running?");
+        }
+    });
+</script>
+
+</body>
+</html>

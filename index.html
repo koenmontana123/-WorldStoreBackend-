@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldStore | Curated Conscious Living</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sage: #84a59d;
+            --sand: #f7ede2;
+            --cream: #fdfaf6;
+            --charcoal: #3d405b;
+            --clay: #e07a5f;
+            --olive: #588157;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        /* Decorative Background */
+        .bg-blob { position: absolute; width: 500px; height: 500px; background: var(--sand); border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.5; }
+        .blob-1 { top: -10%; left: -10%; }
+        .blob-2 { bottom: -10%; right: -10%; background: var(--sage); opacity: 0.2; }
+
+        .hero { text-align: center; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); padding: 80px 60px; border-radius: 40px; box-shadow: 0 40px 100px rgba(0,0,0,0.05); border: 1px solid white; max-width: 550px; position: relative; }
+        
+        .logo-large { margin-bottom: 40px; animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        h1 { color: var(--charcoal); font-size: 48px; margin-bottom: 15px; font-weight: 800; letter-spacing: -1px; }
+        h1 span { color: var(--clay); }
+        
+        p { color: #6b705c; margin-bottom: 45px; font-size: 20px; font-weight: 500; }
+        
+        .btn-group { display: flex; gap: 20px; justify-content: center; }
+        button { padding: 18px 40px; border-radius: 20px; border: none; font-size: 17px; font-weight: 700; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        
+        .btn-login { background: var(--charcoal); color: white; }
+        .btn-signup { background: var(--clay); color: white; }
+        
+        button:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(61, 64, 91, 0.15); }
+        .btn-signup:hover { box-shadow: 0 15px 30px rgba(224, 122, 95, 0.2); }
+
+        @media (max-width: 600px) {
+            .hero { padding: 60px 30px; margin: 20px; }
+            h1 { font-size: 36px; }
+            .btn-group { flex-direction: column; width: 100%; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <div class="hero">
+        <div class="logo-large">
+            <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="48" fill="#F7EDE2" stroke="#84A59D" stroke-width="4"/>
+                <path d="M50 20C50 20 30 40 30 60C30 80 50 85 50 85C50 85 70 80 70 60C70 40 50 20 Z" fill="#588157" opacity="0.8"/>
+                <path d="M50 20L50 85" stroke="#FDFAF6" stroke-width="2" stroke-linecap="round"/>
+                <path d="M50 40C60 45 65 55 65 55" stroke="#FDFAF6" stroke-width="2" stroke-linecap="round"/>
+                <path d="M50 50C40 55 35 65 35 65" stroke="#FDFAF6" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="48" stroke="#3D405B" stroke-width="1" opacity="0.1"/>
+            </svg>
+        </div>
+        <h1>World<span>Store</span></h1>
+        <p>A global marketplace curated for<br>conscious and organic living.</p>
+        <div class="btn-group">
+            <button class="btn-login" onclick="window.location.href='login.html'">Sign In</button>
+            <button class="btn-signup" onclick="window.location.href='signup.html'">Join Now</button>
+        </div>
+    </div>
+</body>
+</html>
