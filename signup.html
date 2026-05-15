@@ -148,9 +148,9 @@
                         localStorage.setItem('userName', data.user.fullName);
                         
                         if (selectedRole === 'buyer') {
-                            window.location.href = 'buyer-portal.html';
+                            window.location.href = '/buyer';
                         } else {
-                            window.location.href = 'seller-portal.html';
+                            window.location.href = '/seller';
                         }
                     }, 1000);
                 } else {
@@ -170,7 +170,7 @@
         }
 
         function goToLogin() {
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
     </script>
 </body>

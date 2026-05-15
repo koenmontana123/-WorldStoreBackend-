@@ -250,7 +250,7 @@
 
         function checkAuth() {
             const token = localStorage.getItem('token');
-            if (!token || localStorage.getItem('role') !== 'seller') window.location.href = 'login.html';
+            if (!token || localStorage.getItem('role') !== 'seller') window.location.href = '/login';
             document.getElementById('userName').textContent = localStorage.getItem('userName');
             document.getElementById('avatar').textContent = localStorage.getItem('userName').charAt(0);
         }

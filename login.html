@@ -70,9 +70,9 @@
                     localStorage.setItem('userName', data.user.fullName);
                     
                     if (selectedRole === 'buyer') {
-                        window.location.href = 'buyer-portal.html';
+                        window.location.href = '/buyer';
                     } else {
-                        window.location.href = 'seller-portal.html';
+                        window.location.href = '/seller';
                     }
                 } else {
                     showMessage(data.error || 'Login failed or role mismatch', 'error');
@@ -89,7 +89,7 @@
         }
 
         function goToSignup() {
-            window.location.href = 'signup.html';
+            window.location.href = '/signup';
         }
 
         document.getElementById('password').addEventListener('keypress', (e) => {
